@@ -34,9 +34,6 @@ jobs:
         ports:
           - 5432:5432
 
-    defaults:
-      run:
-        working-directory: Clients
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     strategy:
