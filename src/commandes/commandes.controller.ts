@@ -12,7 +12,7 @@ import { ProductService } from './commandes.service';
 import { ProductDto } from './commandes.dto';
 import { AuthGuard } from '@nestjs/passport';
 
-@Controller('product')
+@Controller('orders')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 

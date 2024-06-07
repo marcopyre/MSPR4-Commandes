@@ -1,5 +1,4 @@
 export class ProductDto {
-  name: string;
-  max: number;
-  membres: string[];
+  user: number;
+  content: { product: number; quantity: number }[];
 }

@@ -47,9 +47,11 @@ describe('ProductService', () => {
   });
 
   const productDto: ProductDto = {
-    name: 'Test Product',
-    max: 10,
-    membres: ['User 1', 'User 2'],
+    user: 10,
+    content: [
+      { product: 1, quantity: 1 },
+      { product: 1, quantity: 1 },
+    ],
   };
 
   it('should create a product', async () => {
@@ -59,7 +61,7 @@ describe('ProductService', () => {
 
   it('should update a product', async () => {
     const createdProduct = await service.createProduct(productDto);
-    const updatedProductDto = { ...productDto, name: 'Updated Product' };
+    const updatedProductDto = { ...productDto, user: 1 };
     const result = await service.updateProduct(
       updatedProductDto,
       createdProduct.id,
@@ -70,11 +72,11 @@ describe('ProductService', () => {
   it('should get all products', async () => {
     const product1 = await service.createProduct({
       ...productDto,
-      name: 'Product 1',
+      user: 1,
     });
     const product2 = await service.createProduct({
       ...productDto,
-      name: 'Product 2',
+      user: 1,
     });
     const result = await service.getAllPolls();
     expect(result).toEqual([product1, product2]);

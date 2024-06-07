@@ -6,11 +6,8 @@ export class Product {
   id: number;
 
   @Column()
-  name: string;
+  user: number;
 
-  @Column()
-  max: number;
-
-  @Column({ type: 'text', array: true })
-  membres: string[];
+  @Column({ type: 'json' })
+  content: { product: number; quantity: number }[];
 }
