@@ -28,9 +28,8 @@ describe('ProductService', () => {
 
   beforeEach(async () => {
     product = await repository.create({
-      name: 'Test Product',
-      max: 10,
-      membres: [],
+      user: 10,
+      content: [],
     });
     await repository.save(product);
   });
@@ -42,16 +41,14 @@ describe('ProductService', () => {
   describe('createProduct', () => {
     it('should create a product', async () => {
       const newProduct = await service.createProduct({
-        name: 'New Product',
-        max: 5,
-        membres: [],
+        user: 5,
+        content: [],
       });
 
       expect(newProduct).toBeDefined();
       expect(newProduct.id).toBeDefined();
-      expect(newProduct.name).toEqual('New Product');
-      expect(newProduct.max).toEqual(5);
-      expect(newProduct.membres).toEqual([]);
+      expect(newProduct.user).toEqual(5);
+      expect(newProduct.content).toEqual([]);
     });
   });
 
@@ -59,18 +56,16 @@ describe('ProductService', () => {
     it('should update a product', async () => {
       const updatedProduct = await service.updateProduct(
         {
-          name: 'Updated Product',
-          max: 7,
-          membres: [],
+          user: 7,
+          content: [],
         },
         product.id,
       );
 
       expect(updatedProduct).toBeDefined();
       expect(updatedProduct.id).toEqual(product.id);
-      expect(updatedProduct.name).toEqual('Updated Product');
-      expect(updatedProduct.max).toEqual(7);
-      expect(updatedProduct.membres).toEqual([]);
+      expect(updatedProduct.user).toEqual(7);
+      expect(updatedProduct.content).toEqual([]);
     });
   });
 
