@@ -8,6 +8,7 @@ import * as dotenv from 'dotenv';
 import { ProductController } from './commandes/commandes.controller';
 import { ProductService } from './commandes/commandes.service';
 import { Product } from './commandes/commandes.entity';
+import { PrometheusModule } from "@willsoto/nestjs-prometheus";
 dotenv.config();
 
 @Module({
@@ -24,8 +25,11 @@ dotenv.config();
     }),
     TypeOrmModule.forFeature([Product, User]),
     AuthModule,
+    PrometheusModule.register({
+      path: "/metrics",
+    }),
   ],
   providers: [ProductService, UsersService],
   controllers: [ProductController, AppController],
 })
-export class AppModule {}
+export class AppModule { }
