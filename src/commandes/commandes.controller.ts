@@ -7,6 +7,7 @@ import {
   Put,
   Delete,
   UseGuards,
+  Logger,
 } from '@nestjs/common';
 import { ProductService } from './commandes.service';
 import { ProductDto } from './commandes.dto';
