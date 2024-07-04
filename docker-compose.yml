@@ -2,9 +2,9 @@ version: '3.5'
 services:
   app:
     build: .
-    container_name: my-nestjs-app
+    container_name: app-commandes
     ports:
-      - '3005:3000'
+      - '3006:3000'
     environment:
       NODE_ENV: production
       PROMETHEUS_PORT: 9100
@@ -27,7 +27,7 @@ services:
 
   prometheus:
     image: prom/prometheus
-    container_name: prometheus
+    container_name: prometheus-commandes
     ports:
       - '9095:9090'
     volumes:
@@ -35,7 +35,7 @@ services:
 
   grafana:
     image: grafana/grafana
-    container_name: grafana
+    container_name: grafana-orders
     ports:
       - '3001:3000'
     volumes:
