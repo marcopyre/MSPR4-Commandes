@@ -12,6 +12,7 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 import { MetricsService } from './metrics/metrics.service';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { MetricsInterceptor } from './metrics/metrics.interceptor';
+import { ConsumerService } from './messaging/consumer.service';
 dotenv.config();
 
 @Module({
@@ -38,6 +39,7 @@ dotenv.config();
     ProductService,
     UsersService,
     MetricsService,
+    ConsumerService,
     {
       provide: APP_INTERCEPTOR,
       useClass: MetricsInterceptor,
