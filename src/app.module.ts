@@ -47,4 +47,4 @@ dotenv.config();
   ],
   controllers: [ProductController, AppController],
 })
-export class AppModule {}
+export class AppModule { }

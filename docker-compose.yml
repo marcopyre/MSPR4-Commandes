@@ -15,7 +15,7 @@ services:
     networks:
       - rabbitmq_network
 
-  db:
+  db-commandes:
     image: postgres
     restart: always
     environment:

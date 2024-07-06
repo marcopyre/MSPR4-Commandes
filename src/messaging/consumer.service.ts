@@ -1,12 +1,13 @@
 import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
 import amqp, { ChannelWrapper } from 'amqp-connection-manager';
 import { ConfirmChannel } from 'amqplib';
+import { ProductService } from 'src/commandes/commandes.service';
 
 @Injectable()
 export class ConsumerService implements OnModuleInit {
   private channelWrapper: ChannelWrapper;
   private readonly logger = new Logger(ConsumerService.name);
-  constructor() {
+  constructor(private readonly productService: ProductService) {
     const connection = amqp.connect(['amqp://rabbit:root@rabbitmq']);
     this.channelWrapper = connection.createChannel();
   }
@@ -20,6 +21,7 @@ export class ConsumerService implements OnModuleInit {
             const content = JSON.parse(message.content.toString());
             this.logger.log('Received message:', content);
             channel.ack(message);
+            this.productService.deleteAllOrdersByUserId(content);
           }
         });
       });

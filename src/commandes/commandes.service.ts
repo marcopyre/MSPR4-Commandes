@@ -10,10 +10,11 @@ export class ProductService {
   constructor(
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
-  ) {}
+  ) { }
 
   async createProduct(dto: ProductDto): Promise<Product> {
     const product = this.productRepository.create(dto);
+    console.log(product)
     return this.productRepository.save(product);
   }
 
@@ -34,5 +35,13 @@ export class ProductService {
 
   async deleteProduct(id: number) {
     return await this.productRepository.delete(id);
+  }
+
+  async deleteAllOrdersByUserId(userId: number) {
+    return await this.productRepository.createQueryBuilder()
+      .delete()
+      .from(Product)
+      .where("user = :id", { id: userId })
+      .execute()
   }
 }
