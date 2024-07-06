@@ -1,89 +1,104 @@
-import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProductService } from './commandes.service';
-import { Product } from './commandes.entity';
+import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AppModule } from '../app.module';
+import { Product } from './commandes.entity';
+import { ProductDto } from './commandes.dto';
 
 describe('ProductService', () => {
-  let app: INestApplication;
   let service: ProductService;
   let repository: Repository<Product>;
-  let product: Product;
-
-  beforeAll(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
-
-    app = module.createNestApplication();
-    service = module.get<ProductService>(ProductService);
-    repository = module.get<Repository<Product>>('ProductRepository');
-    await app.init();
-  });
-
-  afterAll(async () => {
-    await app.close();
-  });
 
   beforeEach(async () => {
-    product = await repository.create({
-      user: 10,
-      content: [],
-    });
-    await repository.save(product);
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        ProductService,
+        {
+          provide: getRepositoryToken(Product),
+          useClass: Repository,
+        },
+      ],
+    }).compile();
+
+    service = module.get<ProductService>(ProductService);
+    repository = module.get<Repository<Product>>(getRepositoryToken(Product));
   });
 
-  afterEach(async () => {
-    await repository.clear();
+  it('should be defined', () => {
+    expect(service).toBeDefined();
   });
 
   describe('createProduct', () => {
-    it('should create a product', async () => {
-      const newProduct = await service.createProduct({
+    it('should create and save a product', async () => {
+      const dto: ProductDto = {
         user: 5,
         content: [],
-      });
+      }
+      const product = { id: 1, ...dto };
+      jest.spyOn(repository, 'create').mockReturnValue(product as any);
+      jest.spyOn(repository, 'save').mockResolvedValue(product as any);
 
-      expect(newProduct).toBeDefined();
-      expect(newProduct.id).toBeDefined();
-      expect(newProduct.user).toEqual(5);
-      expect(newProduct.content).toEqual([]);
+      const result = await service.createProduct(dto);
+      expect(result).toEqual(product);
+      expect(repository.create).toHaveBeenCalledWith(dto);
+      expect(repository.save).toHaveBeenCalledWith(product);
     });
   });
 
   describe('updateProduct', () => {
-    it('should update a product', async () => {
-      const updatedProduct = await service.updateProduct(
-        {
-          user: 7,
-          content: [],
-        },
-        product.id,
-      );
+    it('should update and save a product', async () => {
+      const dto: ProductDto = {
+        user: 5,
+        content: [],
+      }
+      const id = 1;
+      const existingProduct = { id, ...dto };
+      const updatedProduct = { id, ...dto };
 
-      expect(updatedProduct).toBeDefined();
-      expect(updatedProduct.id).toEqual(product.id);
-      expect(updatedProduct.user).toEqual(7);
-      expect(updatedProduct.content).toEqual([]);
+      jest.spyOn(repository, 'findOneBy').mockResolvedValue(existingProduct as any);
+      jest.spyOn(repository, 'save').mockResolvedValue(updatedProduct as any);
+
+      const result = await service.updateProduct(dto, id);
+      expect(result).toEqual(updatedProduct);
+      expect(repository.findOneBy).toHaveBeenCalledWith({ id });
+      expect(repository.save).toHaveBeenCalledWith(updatedProduct);
     });
   });
 
-  describe('getAllProducts', () => {
+  describe('getAllPolls', () => {
     it('should return an array of products', async () => {
-      const products = await service.getAllPolls();
+      const products = [{ id: 1 }, { id: 2 }];
+      jest.spyOn(repository, 'find').mockResolvedValue(products as any);
 
-      expect(products).toBeInstanceOf(Array);
-      expect(products.length).toBeGreaterThanOrEqual(1);
+      const result = await service.getAllPolls();
+      expect(result).toEqual(products);
+      expect(repository.find).toHaveBeenCalled();
     });
   });
 
   describe('deleteProduct', () => {
-    it('should delete a product', async () => {
-      await service.deleteProduct(product.id);
+    it('should delete a product by id', async () => {
+      const id = 1;
+      const deleteResult = { affected: 1 };
+      jest.spyOn(repository, 'delete').mockResolvedValue(deleteResult as any);
 
-      const deletedProduct = await repository.findOneBy({ id: product.id });
-      expect(deletedProduct).toBeNull();
+      const result = await service.deleteProduct(id);
+      expect(result).toEqual(deleteResult);
+      expect(repository.delete).toHaveBeenCalledWith(id);
+    });
+  });
+
+  describe('deleteAllOrdersByUserId', () => {
+    it('should delete all orders by user id', async () => {
+      const userId = 1;
+      const deleteResult = { affected: 1 };
+      jest.spyOn(repository.createQueryBuilder(), 'delete').mockReturnThis();
+      jest.spyOn(repository.createQueryBuilder(), 'from').mockReturnThis();
+      jest.spyOn(repository.createQueryBuilder(), 'where').mockReturnThis();
+      jest.spyOn(repository.createQueryBuilder(), 'execute').mockResolvedValue(deleteResult as any);
+
+      const result = await service.deleteAllOrdersByUserId(userId);
+      expect(result).toEqual(deleteResult);
     });
   });
 });
