@@ -1,9 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
-import { User } from './users/users.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
-import { UsersService } from './users/users.service';
 import * as dotenv from 'dotenv';
 import { ProductController } from './commandes/commandes.controller';
 import { ProductService } from './commandes/commandes.service';
@@ -24,10 +22,10 @@ dotenv.config();
       username: process.env.DBUSER,
       password: process.env.DBPASS,
       database: process.env.DBNAME,
-      entities: [Product, User],
+      entities: [Product],
       synchronize: true,
     }),
-    TypeOrmModule.forFeature([Product, User]),
+    TypeOrmModule.forFeature([Product]),
     PrometheusModule.register({
       defaultLabels: {
         app: 'orders-api',
@@ -37,7 +35,6 @@ dotenv.config();
   ],
   providers: [
     ProductService,
-    UsersService,
     MetricsService,
     ConsumerService,
     {
