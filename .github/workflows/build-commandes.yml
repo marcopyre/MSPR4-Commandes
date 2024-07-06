@@ -33,3 +33,9 @@ jobs:
 
       - name: Run tests
         run: yarn build
+
+      - name: create network
+        run: docker network create -d bridge rabbitmq_network
+
+      - name: build docker
+        run: docker compose up
