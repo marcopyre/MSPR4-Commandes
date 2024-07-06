@@ -2795,7 +2795,7 @@ amqp-connection-manager@^4.1.14:
   dependencies:
     promise-breaker "^6.0.0"
 
-amqplib@*:
+amqplib@*, amqplib@^0.10.4:
   version "0.10.4"
   resolved "https://registry.npmjs.org/amqplib/-/amqplib-0.10.4.tgz"
   integrity sha512-DMZ4eCEjAVdX1II2TfIUpJhfKAuoCeDIo/YyETbfAqehHTXxxs7WOOd+N1Xxr4cKhx12y23zk8/os98FxlZHrw==
