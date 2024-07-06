@@ -7,7 +7,6 @@ import {
   Put,
   Delete,
   UseGuards,
-  Logger,
 } from '@nestjs/common';
 import { ProductService } from './commandes.service';
 import { ProductDto } from './commandes.dto';
@@ -15,7 +14,7 @@ import { AuthGuard } from '@nestjs/passport';
 
 @Controller('orders')
 export class ProductController {
-  constructor(private readonly productService: ProductService) {}
+  constructor(private readonly productService: ProductService) { }
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
