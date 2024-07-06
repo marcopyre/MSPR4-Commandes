@@ -7,15 +7,15 @@ export class ConsumerService implements OnModuleInit {
   private channelWrapper: ChannelWrapper;
   private readonly logger = new Logger(ConsumerService.name);
   constructor() {
-    const connection = amqp.connect(['amqp://localhost']);
+    const connection = amqp.connect(['amqp://rabbit:root@rabbitmq']);
     this.channelWrapper = connection.createChannel();
   }
 
   public async onModuleInit() {
     try {
       await this.channelWrapper.addSetup(async (channel: ConfirmChannel) => {
-        await channel.assertQueue('emailQueue', { durable: true });
-        await channel.consume('emailQueue', async (message) => {
+        await channel.assertQueue('clientQueue', { durable: true });
+        await channel.consume('clientQueue', async (message) => {
           if (message) {
             const content = JSON.parse(message.content.toString());
             this.logger.log('Received message:', content);

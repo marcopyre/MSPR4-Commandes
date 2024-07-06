@@ -12,6 +12,9 @@ services:
       - .env.docker
     depends_on:
       - prometheus
+    networks:
+      - rabbitmq_network
+
   db:
     image: postgres
     restart: always
@@ -24,6 +27,8 @@ services:
       - ./pgdata:/var/lib/postgresql/data
     ports:
       - '5433:5432'
+    networks:
+      - rabbitmq_network
 
   prometheus:
     image: prom/prometheus
@@ -32,6 +37,8 @@ services:
       - '9095:9090'
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - rabbitmq_network
 
   grafana:
     image: grafana/grafana
@@ -41,6 +48,13 @@ services:
     volumes:
       - grafana-data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning
-
+    networks:
+      - rabbitmq_network
 volumes:
   grafana-data:
+
+
+networks:
+  rabbitmq_network:
+    name: rabbitmq_network
+    external: true
