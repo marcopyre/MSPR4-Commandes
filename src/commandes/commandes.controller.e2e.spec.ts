@@ -1,6 +1,6 @@
-import { ProductService } from './commandes.service';
-import { ProductDto } from './commandes.dto';
-import { Product } from './commandes.entity';
+import { OrderService } from './commandes.service';
+import { OrderDto } from './commandes.dto';
+import { Order } from './commandes.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -9,9 +9,9 @@ import { DataSource } from 'typeorm';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-describe('ProductService', () => {
-  let service: ProductService;
-  let repository: Repository<Product>;
+describe('OrderService', () => {
+  let service: OrderService;
+  let repository: Repository<Order>;
   let dataSource: DataSource;
 
   beforeAll(async () => {
@@ -24,17 +24,17 @@ describe('ProductService', () => {
           username: process.env.DBUSER,
           password: process.env.DBPASS,
           database: process.env.DBNAME,
-          entities: [Product],
+          entities: [Order],
           synchronize: true,
           dropSchema: true,
         }),
-        TypeOrmModule.forFeature([Product]),
+        TypeOrmModule.forFeature([Order]),
       ],
-      providers: [ProductService],
+      providers: [OrderService],
     }).compile();
 
-    service = module.get<ProductService>(ProductService);
-    repository = module.get<Repository<Product>>(getRepositoryToken(Product));
+    service = module.get<OrderService>(OrderService);
+    repository = module.get<Repository<Order>>(getRepositoryToken(Order));
     dataSource = module.get<DataSource>(DataSource);
   });
 
@@ -46,7 +46,7 @@ describe('ProductService', () => {
     await repository.clear();
   });
 
-  const productDto: ProductDto = {
+  const orderDto: OrderDto = {
     user: 10,
     content: [
       { product: 1, quantity: 1 },
@@ -54,38 +54,35 @@ describe('ProductService', () => {
     ],
   };
 
-  it('should create a product', async () => {
-    const result = await service.createProduct(productDto);
-    expect(result).toEqual({ id: expect.any(Number), ...productDto });
+  it('should create a order', async () => {
+    const result = await service.createOrder(orderDto);
+    expect(result).toEqual({ id: expect.any(Number), ...orderDto });
   });
 
-  it('should update a product', async () => {
-    const createdProduct = await service.createProduct(productDto);
-    const updatedProductDto = { ...productDto, user: 1 };
-    const result = await service.updateProduct(
-      updatedProductDto,
-      createdProduct.id,
-    );
-    expect(result).toEqual({ id: createdProduct.id, ...updatedProductDto });
+  it('should update a order', async () => {
+    const createdOrder = await service.createOrder(orderDto);
+    const updatedOrderDto = { ...orderDto, user: 1 };
+    const result = await service.updateOrder(updatedOrderDto, createdOrder.id);
+    expect(result).toEqual({ id: createdOrder.id, ...updatedOrderDto });
   });
 
-  it('should get all products', async () => {
-    const product1 = await service.createProduct({
-      ...productDto,
+  it('should get all orders', async () => {
+    const order1 = await service.createOrder({
+      ...orderDto,
       user: 1,
     });
-    const product2 = await service.createProduct({
-      ...productDto,
+    const order2 = await service.createOrder({
+      ...orderDto,
       user: 1,
     });
     const result = await service.getAllPolls();
-    expect(result).toEqual([product1, product2]);
+    expect(result).toEqual([order1, order2]);
   });
 
-  it('should delete a product', async () => {
-    const createdProduct = await service.createProduct(productDto);
-    await service.deleteProduct(createdProduct.id);
-    const result = await repository.findOneBy({ id: createdProduct.id });
+  it('should delete a order', async () => {
+    const createdOrder = await service.createOrder(orderDto);
+    await service.deleteOrder(createdOrder.id);
+    const result = await repository.findOneBy({ id: createdOrder.id });
     expect(result).toBeNull();
   });
 });

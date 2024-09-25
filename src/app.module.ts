@@ -5,9 +5,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { UsersService } from './users/users.service';
 import * as dotenv from 'dotenv';
-import { ProductController } from './commandes/commandes.controller';
-import { ProductService } from './commandes/commandes.service';
-import { Product } from './commandes/commandes.entity';
+import { OrderController } from './commandes/commandes.controller';
+import { OrderService } from './commandes/commandes.service';
+import { Order } from './commandes/commandes.entity';
 import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 import { MetricsService } from './metrics/metrics.service';
 import { APP_INTERCEPTOR } from '@nestjs/core';
@@ -24,10 +24,10 @@ dotenv.config();
       username: process.env.DBUSER,
       password: process.env.DBPASS,
       database: process.env.DBNAME,
-      entities: [Product, User],
+      entities: [Order, User],
       synchronize: true,
     }),
-    TypeOrmModule.forFeature([Product, User]),
+    TypeOrmModule.forFeature([Order, User]),
     PrometheusModule.register({
       defaultLabels: {
         app: 'orders-api',
@@ -36,7 +36,7 @@ dotenv.config();
     AuthModule,
   ],
   providers: [
-    ProductService,
+    OrderService,
     UsersService,
     MetricsService,
     ConsumerService,
@@ -45,6 +45,6 @@ dotenv.config();
       useClass: MetricsInterceptor,
     },
   ],
-  controllers: [ProductController, AppController],
+  controllers: [OrderController, AppController],
 })
 export class AppModule {}

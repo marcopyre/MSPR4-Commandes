@@ -7,36 +7,35 @@ import {
   Put,
   Delete,
   UseGuards,
-  Logger,
 } from '@nestjs/common';
-import { ProductService } from './commandes.service';
-import { ProductDto } from './commandes.dto';
+import { OrderService } from './commandes.service';
+import { OrderDto } from './commandes.dto';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('orders')
-export class ProductController {
-  constructor(private readonly productService: ProductService) {}
+export class OrderController {
+  constructor(private readonly orderService: OrderService) {}
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
-  createProduct(@Body() dto: ProductDto) {
-    return this.productService.createProduct(dto);
+  createOrder(@Body() dto: OrderDto) {
+    return this.orderService.createOrder(dto);
   }
 
   @Put(':id')
   @UseGuards(AuthGuard('jwt'))
-  updateProduct(@Body() dto: ProductDto, @Param('id') id: number) {
-    return this.productService.updateProduct(dto, id);
+  updateOrder(@Body() dto: OrderDto, @Param('id') id: number) {
+    return this.orderService.updateOrder(dto, id);
   }
 
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'))
-  deleteProduct(@Param('id') id: number) {
-    return this.productService.deleteProduct(id);
+  deleteOrder(@Param('id') id: number) {
+    return this.orderService.deleteOrder(id);
   }
 
   @Get()
-  getAllProducts() {
-    return this.productService.getAllPolls();
+  getAllOrders() {
+    return this.orderService.getAllPolls();
   }
 }

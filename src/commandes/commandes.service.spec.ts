@@ -1,15 +1,15 @@
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { ProductService } from './commandes.service';
-import { Product } from './commandes.entity';
+import { OrderService } from './commandes.service';
+import { Order } from './commandes.entity';
 import { Repository } from 'typeorm';
 import { AppModule } from '../app.module';
 
-describe('ProductService', () => {
+describe('OrderService', () => {
   let app: INestApplication;
-  let service: ProductService;
-  let repository: Repository<Product>;
-  let product: Product;
+  let service: OrderService;
+  let repository: Repository<Order>;
+  let order: Order;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -17,8 +17,8 @@ describe('ProductService', () => {
     }).compile();
 
     app = module.createNestApplication();
-    service = module.get<ProductService>(ProductService);
-    repository = module.get<Repository<Product>>('ProductRepository');
+    service = module.get<OrderService>(OrderService);
+    repository = module.get<Repository<Order>>('OrderRepository');
     await app.init();
   });
 
@@ -27,63 +27,63 @@ describe('ProductService', () => {
   });
 
   beforeEach(async () => {
-    product = await repository.create({
+    order = await repository.create({
       user: 10,
       content: [],
     });
-    await repository.save(product);
+    await repository.save(order);
   });
 
   afterEach(async () => {
     await repository.clear();
   });
 
-  describe('createProduct', () => {
-    it('should create a product', async () => {
-      const newProduct = await service.createProduct({
+  describe('createOrder', () => {
+    it('should create a order', async () => {
+      const newOrder = await service.createOrder({
         user: 5,
         content: [],
       });
 
-      expect(newProduct).toBeDefined();
-      expect(newProduct.id).toBeDefined();
-      expect(newProduct.user).toEqual(5);
-      expect(newProduct.content).toEqual([]);
+      expect(newOrder).toBeDefined();
+      expect(newOrder.id).toBeDefined();
+      expect(newOrder.user).toEqual(5);
+      expect(newOrder.content).toEqual([]);
     });
   });
 
-  describe('updateProduct', () => {
-    it('should update a product', async () => {
-      const updatedProduct = await service.updateProduct(
+  describe('updateOrder', () => {
+    it('should update a order', async () => {
+      const updatedOrder = await service.updateOrder(
         {
           user: 7,
           content: [],
         },
-        product.id,
+        order.id,
       );
 
-      expect(updatedProduct).toBeDefined();
-      expect(updatedProduct.id).toEqual(product.id);
-      expect(updatedProduct.user).toEqual(7);
-      expect(updatedProduct.content).toEqual([]);
+      expect(updatedOrder).toBeDefined();
+      expect(updatedOrder.id).toEqual(order.id);
+      expect(updatedOrder.user).toEqual(7);
+      expect(updatedOrder.content).toEqual([]);
     });
   });
 
-  describe('getAllProducts', () => {
-    it('should return an array of products', async () => {
-      const products = await service.getAllPolls();
+  describe('getAllOrders', () => {
+    it('should return an array of orders', async () => {
+      const orders = await service.getAllPolls();
 
-      expect(products).toBeInstanceOf(Array);
-      expect(products.length).toBeGreaterThanOrEqual(1);
+      expect(orders).toBeInstanceOf(Array);
+      expect(orders.length).toBeGreaterThanOrEqual(1);
     });
   });
 
-  describe('deleteProduct', () => {
-    it('should delete a product', async () => {
-      await service.deleteProduct(product.id);
+  describe('deleteOrder', () => {
+    it('should delete a order', async () => {
+      await service.deleteOrder(order.id);
 
-      const deletedProduct = await repository.findOneBy({ id: product.id });
-      expect(deletedProduct).toBeNull();
+      const deletedOrder = await repository.findOneBy({ id: order.id });
+      expect(deletedOrder).toBeNull();
     });
   });
 });

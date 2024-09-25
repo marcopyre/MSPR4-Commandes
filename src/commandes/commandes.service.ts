@@ -2,37 +2,37 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Product } from './commandes.entity';
-import { ProductDto } from './commandes.dto';
+import { Order } from './commandes.entity';
+import { OrderDto } from './commandes.dto';
 
 @Injectable()
-export class ProductService {
+export class OrderService {
   constructor(
-    @InjectRepository(Product)
-    private readonly productRepository: Repository<Product>,
+    @InjectRepository(Order)
+    private readonly orderRepository: Repository<Order>,
   ) {}
 
-  async createProduct(dto: ProductDto): Promise<Product> {
-    const product = this.productRepository.create(dto);
-    return this.productRepository.save(product);
+  async createOrder(dto: OrderDto): Promise<Order> {
+    const order = this.orderRepository.create(dto);
+    return this.orderRepository.save(order);
   }
 
-  async updateProduct(dto: ProductDto, id: number): Promise<Product> {
-    const product = await this.productRepository.findOneBy({ id });
+  async updateOrder(dto: OrderDto, id: number): Promise<Order> {
+    const order = await this.orderRepository.findOneBy({ id });
 
-    const updatedProduct = {
+    const updatedOrder = {
       ...dto,
-      id: product.id,
+      id: order.id,
     };
 
-    return this.productRepository.save(updatedProduct);
+    return this.orderRepository.save(updatedOrder);
   }
 
-  async getAllPolls(): Promise<Product[]> {
-    return this.productRepository.find();
+  async getAllPolls(): Promise<Order[]> {
+    return this.orderRepository.find();
   }
 
-  async deleteProduct(id: number) {
-    return await this.productRepository.delete(id);
+  async deleteOrder(id: number) {
+    return await this.orderRepository.delete(id);
   }
 }
